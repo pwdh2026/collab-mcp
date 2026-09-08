@@ -24,9 +24,15 @@ def now_iso() -> str:
 
 
 def safe_read_json(file_path: Path) -> Optional[dict]:
-    """安全读取 JSON 文件，损坏时返回 None 并记录警告。"""
+    """安全读取 JSON 文件：不存在静默返回 None，损坏时返回 None 并记录警告。
+
+    「文件不存在」是正常路径（如项目锁未持有、done 残留清理），
+    不该以 WARNING「损坏文件」面目出现；真损坏/不可读才告警。
+    """
     try:
         return json.loads(file_path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return None
     except (json.JSONDecodeError, IOError) as e:
         logger.warning(f"跳过损坏文件 {file_path.name}: {e}")
         return None

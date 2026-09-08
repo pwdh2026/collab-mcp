@@ -2055,8 +2055,8 @@ class SearchTroubleshootingTest(unittest.IsolatedAsyncioTestCase):
         self.assertIn("非空", result["error"])
 
     async def test_search_hits_repo_rule(self):
-        # fixit 语料是仓库旁的独立部署（不随 collab 发行）；缺失时工具按设计
-        # 返回明确报错，本用例跳过而非失败，保证 hermetic。
+        # fixit 语料是仓库旁的独立部署（不随 collab 发行，公开镜像 pwdh2026/collab-mcp
+        # 不含 fixit/）；缺失时工具按设计返回明确报错，本用例跳过而非失败，保证 hermetic。
         if not fixit._FIXIT_DIR.is_dir():
             self.skipTest(f"fixit 语料未部署: {fixit._FIXIT_DIR}")
         result = _parse(await fixit.search_troubleshooting("acquire_project_lock", limit=3))
@@ -4030,6 +4030,18 @@ class UtilsTest(unittest.TestCase):
         # 不应残留临时文件
         leftovers = [f for f in _TEST_DIR.glob("*.tmp") if f.name.startswith(".")]
         self.assertEqual(leftovers, [])
+
+    def test_missing_file_silent_corrupt_still_warns(self):
+        # v3.36.2：文件不存在 → None 且零 WARNING；内容损坏 → None 且保留 WARNING
+        missing = _TEST_DIR / "definitely_missing_3362.json"
+        with self.assertNoLogs("collab-mcp", level="WARNING"):
+            self.assertIsNone(safe_read_json(missing))
+
+        broken = _TEST_DIR / "broken_3362.json"
+        broken.write_text("{not json", encoding="utf-8")
+        with self.assertLogs("collab-mcp", level="WARNING") as cap:
+            self.assertIsNone(safe_read_json(broken))
+        self.assertTrue(any("broken_3362" in r.getMessage() for r in cap.records))
 
 
 class StdioProtocolTest(unittest.TestCase):
