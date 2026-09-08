@@ -1,0 +1,12 @@
+{
+  "name": "ocr-delegate-spec",
+  "description": "生成 ocr delegate 审查规格 Playbook：在装有 git + ocr 的机器上产出可审查文件清单 + 规则组（方案 B 第 1 步，供无 git 队友机 host 审查）",
+  "title": "生成 ocr delegate 规格：{commit}",
+  "content": "请为提交 {commit} 生成 ocr delegate 审查规格（需在装有 git + ocr 的机器执行）。\n\n步骤：\n1. 确认执行环境：git 仓库 {repo} 可访问，ocr 可用（Windows 用 ocr.cmd；PowerShell 执行策略拦截 .ps1）\n2. 运行 ocr.cmd delegate preview --repo {repo} --commit {commit}，得到可审查文件清单（reviewable）与插入/删除统计\n3. 对 preview 列出的可审查文件运行 ocr.cmd delegate rule <文件列表>，得到按内容分组的规则集\n4. 把 preview 与 rule 输出合并写入共享文件 .codex_tmp/ocr-delegate-spec-{commit}.md（UTF-8 无 BOM），供队友 read_shared_file 读取\n5. 确认 spec 文件落盘且含：文件清单 + 插入/删除统计 + 完整规则文本\n\n完成后提交 evidence（spec 文件路径 + 可审查文件数 + 规则组数）。",
+  "required_params": ["commit"],
+  "default_params": {"repo": "C:\\myshare"},
+  "default_assignee": "PC-A",
+  "default_execution_env": "中枢本机（需 git + ocr）",
+  "default_deadline_minutes": 60,
+  "review_required": false
+}

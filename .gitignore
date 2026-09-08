@@ -1,0 +1,40 @@
+# 运行时状态（平台自身按文件生成，不入库）
+server.log
+collab/inbox/
+collab/done/
+collab/chat/
+collab/locks/
+collab/notifications/
+collab/journal/
+collab/memory/
+collab/vision/
+collab/body/
+collab/teammates.json
+collab/schedules/
+collab/artifacts/
+dashboard.html
+
+# 派生数据与文档摄入
+documents/
+results/
+
+# Python
+__pycache__/
+*.pyc
+
+# 密钥与凭据（永不入库）
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+authorized_keys
+
+# 工具缓存
+.codegraph/
+.codex_tmp/
+*.tmp

@@ -1,0 +1,23 @@
+{
+  "name": "pipeline-ocr-delegate-review",
+  "description": "ocr 委托审查流水线（方案 B）：spec（中枢生成 delegate 规格）→ review（host agent 行级审查，复核闸门）；适用于队友机无 git 的场景",
+  "required_params": ["commit"],
+  "default_params": {"repo": "C:\\myshare", "spec_assignee": "PC-A"},
+  "pipeline": [
+    {
+      "name": "spec",
+      "template": "ocr-delegate-spec",
+      "params": {"commit": "{commit}", "repo": "{repo}"},
+      "assignee": "{spec_assignee}",
+      "depends_on": [],
+      "claim_timeout_minutes": 60
+    },
+    {
+      "name": "review",
+      "template": "ocr-delegate-review",
+      "params": {"commit": "{commit}", "repo": "{repo}"},
+      "depends_on": ["spec"],
+      "claim_timeout_minutes": 120
+    }
+  ]
+}

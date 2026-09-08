@@ -1,0 +1,12 @@
+{
+  "name": "security-review",
+  "description": "安全审查 Playbook（复核闸门）：注入/越权/路径穿越/密钥泄露/依赖漏洞五类",
+  "title": "安全审查：{target}",
+  "content": "请对 {target} 做安全审查并输出分级问题清单。\n\n审查维度：\n1. 注入（命令/SQL/模板）\n2. 越权与认证\n3. 路径穿越与文件访问\n4. 密钥/敏感信息泄露\n5. 依赖与供应链漏洞\n\n输出：高（必改）/中（建议）/低（可选），每条给出文件位置、攻击路径与修复建议，附验证建议。\n\n完成后提交 evidence（问题清单摘要），由中枢复核。",
+  "required_params": ["target"],
+  "default_params": {},
+  "default_assignee": "any",
+  "default_execution_env": "",
+  "default_deadline_minutes": 120,
+  "review_required": true
+}

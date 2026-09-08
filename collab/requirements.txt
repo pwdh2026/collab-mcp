@@ -1,0 +1,12 @@
+# Claude 协作 MCP Server 依赖
+# 安装方法: pip install -r requirements.txt
+# Python 版本要求: >= 3.10
+
+# 注意：server.py 使用 MCP SDK 2.x 的 MCPServer API，1.x 不兼容
+mcp>=2.0.0
+
+# CentOS 7 可选：若系统 sqlite3 过旧（无 FTS5），安装后全文搜索更准确
+# pysqlite3-binary
+
+# v3.0 可选：媒体转写后端（transcribe_media 自动探测；不装则工具明确报错）
+# faster-whisper

@@ -1,0 +1,12 @@
+{
+  "name": "code-review",
+  "description": "代码审查 Playbook：按功能/安全/并发/错误处理/可读性五轴审查，输出分级问题清单",
+  "title": "代码审查：{target}",
+  "content": "请对 {target} 进行代码审查（审查重点：{focus}）。\n\n审查步骤：\n1. 先用 get_task_context / query_codegraph 定位相关符号，理解改动意图\n2. 按五轴审查：功能正确性、安全（注入/越权/路径穿越）、并发（锁/竞态）、错误处理（异常吞掉/幂等）、可读性与文档\n3. 输出分级问题清单：高（必改）/中（建议）/低（可选），每条给出文件位置与修改建议\n4. 附上验证建议（测试用例或手工验证步骤）\n\n完成后提交 evidence（问题清单摘要），由中枢复核。",
+  "required_params": ["target"],
+  "default_params": {"focus": "全面审查"},
+  "default_assignee": "any",
+  "default_execution_env": "",
+  "default_deadline_minutes": 120,
+  "review_required": true
+}

@@ -1,0 +1,36 @@
+{
+  "name": "pipeline-research",
+  "description": "研究流水线（借鉴 academic-research-skills）：research → draft → review（复核闸门）→ finalize",
+  "required_params": ["topic"],
+  "default_params": {},
+  "pipeline": [
+    {
+      "name": "research",
+      "template": "research-doc",
+      "params": {"topic": "{topic}"},
+      "depends_on": [],
+      "claim_timeout_minutes": 60
+    },
+    {
+      "name": "draft",
+      "template": "write-doc",
+      "params": {"topic": "研究报告草稿：{topic}", "file": "results/{topic}/draft.md"},
+      "depends_on": ["research"],
+      "claim_timeout_minutes": 60
+    },
+    {
+      "name": "review",
+      "template": "doc-review",
+      "params": {"target": "研究报告草稿：{topic}"},
+      "depends_on": ["draft"],
+      "claim_timeout_minutes": 45
+    },
+    {
+      "name": "finalize",
+      "template": "finalize-doc",
+      "params": {"topic": "{topic}"},
+      "depends_on": ["review"],
+      "claim_timeout_minutes": 45
+    }
+  ]
+}

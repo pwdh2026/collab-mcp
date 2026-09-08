@@ -1,0 +1,12 @@
+{
+  "name": "research-doc",
+  "description": "调研 Playbook：围绕主题收集事实/方案对比/来源清单，输出调研要点（供 pipeline-research 使用）",
+  "title": "调研：{topic}",
+  "content": "请围绕 {topic} 做一次调研并输出调研要点。\n\n步骤：\n1. 明确调研目标与范围（必要时先 get_task_context 或 read_shared_file 获取上下文）\n2. 收集事实、方案对比、关键数字与结论\n3. 输出分级要点：结论先行、论据/来源、风险与空白\n4. 完整输出写入共享文件（建议 results/{topic}/research.md），用 result_path 引用\n\n提示（v2.4.1）：{topic} 会用于草稿/定稿的建议输出路径，请使用安全文件名，避免 / \\\\ 与引号。\n\n完成后提交 evidence（调研要点摘要 + 来源清单数量）。",
+  "required_params": ["topic"],
+  "default_params": {},
+  "default_assignee": "any",
+  "default_execution_env": "",
+  "default_deadline_minutes": 120,
+  "review_required": false
+}

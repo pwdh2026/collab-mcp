@@ -1,0 +1,12 @@
+{
+  "name": "run-tests",
+  "description": "跑测试并汇报 Playbook：定位项目 → 执行全量测试 → 输出结果摘要与失败定位",
+  "title": "运行测试：{project_path}",
+  "content": "请在 {project_path} 下运行测试并汇报。\n\n步骤：\n1. 确认项目路径存在于执行环境（hub VM），必要时用 read_shared_file 查看内容\n2. 运行测试命令：hub VM 上默认 python=python2（直接跑会 SyntaxError），必须用 python3.11：\n   python3.11 -m unittest discover -s tests；Windows 本机用 python -m unittest discover -s tests\n3. 汇总：通过数/失败数/耗时，失败用例的报错摘要与疑似根因\n4. 完整输出写入共享文件，用 result_path 引用\n\n完成后提交 evidence（测试结果摘要）。",
+  "required_params": ["project_path"],
+  "default_params": {},
+  "default_assignee": "any",
+  "default_execution_env": "hub VM",
+  "default_deadline_minutes": 60,
+  "review_required": false
+}

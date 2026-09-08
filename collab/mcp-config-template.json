@@ -1,0 +1,33 @@
+{
+  "_说明": "复制以下内容到 Claude 的 MCP 配置中。详见 teammate-vm-setup-guide.md 步骤 4。",
+  "_注意": "如果使用 Git Bash，保留 MSYS_NO_PATHCONV。如果使用 PowerShell 或 cmd，可删除 env 字段。",
+
+  "collab": {
+    "type": "stdio",
+    "command": "ssh",
+    "args": [
+      "centos-vm",
+      "/usr/local/bin/python3.11",
+      "/mnt/hgfs/myshare/collab/server.py"
+    ],
+    "env": {
+      "MSYS_NO_PATHCONV": "1"
+    }
+  },
+
+  "_配置位置": {
+    "全局 (所有项目可用)": "~/.claude.json → projects → \"<你的项目路径>\" → mcpServers",
+    "项目局部": "项目文件夹/.claude/settings.json → mcpServers",
+    "推荐": "全局配置，方便所有项目都能协作"
+  },
+
+  "_变更记录": [
+    "v1.4.1 (2026-08-03): notify_daemon 加固 — feed 有界裁剪、先发事件后存状态（崩溃不丢）、系统消息去重、原子写、锁文件",
+    "v1.4.0 (2026-08-03): L3 事件通知 — notify_daemon.py + get_notifications 工具 + VM cron 脚本",
+    "v1.3.2 (2026-08-03): PC-B 代码审查后修复 — asyncio.Lock、complete_task 幂等/残留清理、RotatingFileHandler、fsync、12位ID、时间戳一致",
+    "v1.3.1 (2026-08-03): 新增 list_shared_dir / read_shared_file — 队友机可通过 MCP 读取共享文件夹",
+    "v1.3.0 (2026-08-03): server.py 拆分为 collab_mcp/ 包；要求 mcp>=2.0.0；Windows/UTF-8 兼容修复",
+    "v1.2.0 (2026-08-03): 11 个工具 — 新增 register_teammate, list_teammates, health_check",
+    "v1.0.0 (2026-07-29): 8 个工具 — 初次发布"
+  ]
+}

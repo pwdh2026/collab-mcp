@@ -1,0 +1,12 @@
+{
+  "name": "finalize-doc",
+  "description": "文档定稿 Playbook：吸收复核意见输出最终版（供 pipeline-research 使用）",
+  "title": "定稿：{topic}",
+  "content": "请根据复核结论对 {topic} 定稿。\n\n步骤：\n1. 读取复核意见（get_task_context 或 chat 关联消息）\n2. 逐条吸收：高必改、中建议、低可选\n3. 输出最终版到共享文件（建议 results/{topic}/final.md），用 result_path 引用\n4. evidence 中说明吸收清单（每条意见 → 处置）\n\n完成后提交 evidence（定稿路径 + 意见处置摘要）。",
+  "required_params": ["topic"],
+  "default_params": {},
+  "default_assignee": "any",
+  "default_execution_env": "",
+  "default_deadline_minutes": 90,
+  "review_required": false
+}

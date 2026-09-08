@@ -1,0 +1,7 @@
+# Repository-local gitleaks configuration.
+# The pre-commit hook (.githooks/pre-commit -> security/scan-staged-secrets.ps1)
+# uses PowerShell patterns; gitleaks is used ad-hoc / in CI. This file extends the
+# default rules. Auto-loaded from repo root.
+
+[extend]
+useDefault = true

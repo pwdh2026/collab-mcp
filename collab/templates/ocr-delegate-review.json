@@ -1,0 +1,12 @@
+{
+  "name": "ocr-delegate-review",
+  "description": "ocr host-agent 审查 Playbook（方案 B 第 2 步）：用 delegate 规格（规则组 + 文件清单）+ diff 产出行级意见，无需 API key，适合无 git 队友机",
+  "title": "ocr 行级审查：{commit}",
+  "content": "请作为 host agent 按 ocr delegate 规格完成对提交 {commit} 的代码审查（无需 API key）。\n\n前置：规格文件按约定位于共享目录 .codex_tmp/ocr-delegate-spec-{commit}.md（由装有 git+ocr 的机器生成；若缺失，先要求生成或向中枢索取）。\n\n步骤：\n1. read_shared_file 读取规格文件（含可审查文件清单、插入/删除统计、按扩展名分组的规则集）\n2. 获取对应 diff：有 git 环境用 git show {commit}；无 git 环境向中枢索取 diff 或读取共享产物\n3. 按规则集逐文件审查，产出行级意见：文件:行号 + 严重度（高/中/低）+ 问题描述 + 修改建议；把握 precision-over-recall 原则，非确定缺陷不报\n4. 评估：规则覆盖度是否足够、有无误报/漏报、业务层约束是否缺失（通用规则不含项目业务约定）\n5. 完整报告写入 results/ocr-verify-{commit}.md，evidence 附摘要 + result_path\n\n完成后提交审核，由中枢复核。",
+  "required_params": ["commit"],
+  "default_params": {"repo": "C:\\myshare"},
+  "default_assignee": "any",
+  "default_execution_env": "任意（无 git 时配合方案 B：中枢生成规格）",
+  "default_deadline_minutes": 120,
+  "review_required": true
+}

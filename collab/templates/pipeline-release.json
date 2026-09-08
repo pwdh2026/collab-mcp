@@ -1,0 +1,22 @@
+{
+  "name": "pipeline-release",
+  "description": "发布流水线（含子流水线嵌套）：quality（子流水线 pipeline-parallel-review）→ deploy-check（复核闸门）",
+  "required_params": ["target", "project_path"],
+  "default_params": {},
+  "pipeline": [
+    {
+      "name": "quality",
+      "template": "pipeline-parallel-review",
+      "params": {"target": "{target}", "project_path": "{project_path}"},
+      "depends_on": [],
+      "claim_timeout_minutes": 90
+    },
+    {
+      "name": "deploy-check",
+      "template": "code-review",
+      "params": {"target": "发布清单：{target}"},
+      "depends_on": ["quality"],
+      "claim_timeout_minutes": 30
+    }
+  ]
+}

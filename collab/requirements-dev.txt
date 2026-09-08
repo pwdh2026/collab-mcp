@@ -1,0 +1,6 @@
+# 测试/CI 用可选依赖（仅测试环境安装；运行时保持零硬依赖，转换器自动降级）
+# v2.7.3：CI 此前只装 requirements.txt（mcp），docx/bs4 缺失导致测试失败
+python-docx
+beautifulsoup4
+ebooklib
+striprtf

@@ -1,0 +1,22 @@
+{
+  "name": "pipeline-code-review",
+  "description": "代码审查流水线：lint（跑测试）→ review（代码审查，复核闸门）",
+  "required_params": ["target", "project_path"],
+  "default_params": {},
+  "pipeline": [
+    {
+      "name": "lint",
+      "template": "run-tests",
+      "params": {"project_path": "{project_path}"},
+      "depends_on": [],
+      "claim_timeout_minutes": 15
+    },
+    {
+      "name": "review",
+      "template": "code-review",
+      "params": {"target": "{target}"},
+      "depends_on": ["lint"],
+      "claim_timeout_minutes": 45
+    }
+  ]
+}

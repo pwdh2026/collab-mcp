@@ -1,0 +1,12 @@
+{
+  "name": "write-doc",
+  "description": "写文档 Playbook：输出结构化文档（背景/核心概念/使用示例/FAQ）",
+  "title": "编写文档：{topic}",
+  "content": "请编写关于 {topic} 的文档，输出到 {file}。\n\n结构建议：\n1. 背景与目标\n2. 核心概念/设计\n3. 使用方式（含示例）\n4. 常见问题 FAQ\n\n要求：\n- 面向读者：{audience}\n- 用中文撰写，避免空话，优先具体示例\n- 完成后在 evidence 中给出文档路径与章节概览",
+  "required_params": ["topic"],
+  "default_params": {"audience": "开发者", "file": "docs/未命名.md"},
+  "default_assignee": "any",
+  "default_execution_env": "",
+  "default_deadline_minutes": 90,
+  "review_required": false
+}

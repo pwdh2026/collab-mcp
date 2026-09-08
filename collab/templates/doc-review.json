@@ -1,0 +1,12 @@
+{
+  "name": "doc-review",
+  "description": "文档复核 Playbook（复核闸门）：事实准确性/来源可溯/结构/引用/完整性",
+  "title": "文档复核：{target}",
+  "content": "请对 {target} 进行文档复核并输出分级问题清单。\n\n复核维度：\n1. 事实准确性：结论是否有依据、数字是否可溯源\n2. 来源可溯：引用/来源是否真实可查\n3. 结构与完整性：背景→论证→结论是否完整\n4. 可读性与格式\n5. 风险/空白是否如实标注\n\n输出：高（必改）/中（建议）/低（可选），每条给出文件位置与修改建议，附验证建议。\n\n完成后提交 evidence（问题清单摘要），由中枢复核。",
+  "required_params": ["target"],
+  "default_params": {},
+  "default_assignee": "any",
+  "default_execution_env": "",
+  "default_deadline_minutes": 90,
+  "review_required": true
+}

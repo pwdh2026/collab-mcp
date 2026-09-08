@@ -1,0 +1,31 @@
+{
+  "name": "pipeline-conditional-review",
+  "description": "条件分支流水线：lint → 按 lang 参数选择 review-python 或 review-js（不满足条件的分支创建即跳过）",
+  "required_params": ["target", "project_path", "lang"],
+  "default_params": {},
+  "pipeline": [
+    {
+      "name": "lint",
+      "template": "run-tests",
+      "params": {"project_path": "{project_path}"},
+      "depends_on": [],
+      "claim_timeout_minutes": 15
+    },
+    {
+      "name": "review-python",
+      "template": "code-review",
+      "params": {"target": "{target}"},
+      "depends_on": ["lint"],
+      "if": {"param": "lang", "equals": "python"},
+      "claim_timeout_minutes": 45
+    },
+    {
+      "name": "review-js",
+      "template": "code-review",
+      "params": {"target": "{target}"},
+      "depends_on": ["lint"],
+      "if": {"param": "lang", "equals": "javascript"},
+      "claim_timeout_minutes": 45
+    }
+  ]
+}
