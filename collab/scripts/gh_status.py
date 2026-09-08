@@ -43,6 +43,12 @@ def gh_api(path: str):
 
 
 def main() -> None:
+    if not REPOS:
+        raise SystemExit(
+            "未设置 GH_STATUS_REPOS。请传入逗号分隔的仓库列表，例如：\n"
+            '  GH_STATUS_REPOS="octocat/Hello-World,you/your-repo" '
+            "python collab/scripts/gh_status.py"
+        )
     day = sys.argv[1] if len(sys.argv) > 1 else date.today().strftime("%Y%m%d")
     lines = [f"# GitHub 自动化状态报告（{day[:4]}-{day[4:6]}-{day[6:]}）", ""]
     lines.append("> 生成方式：gh API 聚合仓库 issue/PR/release/提交/CI 状态。")

@@ -191,7 +191,7 @@ VM 侧配置：`/etc/ssh/sshd_config` 开 `PermitUserEnvironment yes`，然后
 - **日志**：`server.log`，超过 10MB 自动归档，保留最近 3 份
 - **健康检查**：`health_check` 工具或 `python server.py --health`
 - **事件通知（L3）**：`notify_daemon.py` 监控新任务/新消息，写入 `notifications/feed.jsonl` 并自动在聊天发系统消息。VM 上安装每分钟扫描：`bash collab/setup_notify_vm.sh`
-- **GitHub 巡检**：`python collab/scripts/gh_status.py [YYYYMMDD]` 聚合账号下仓库的 issue/PR/release/提交/CI 状态，生成 `results/gh-status-YYYYMMDD.md`，可配合 `add_document` 摄入知识库（需 gh 已登录）
+- **GitHub 巡检**：`GH_STATUS_REPOS="you/repo1,you/repo2" python collab/scripts/gh_status.py [YYYYMMDD]` 聚合指定仓库的 issue/PR/release/提交/CI 状态，生成 `results/gh-status-YYYYMMDD.md`，可配合 `add_document` 摄入知识库（需 gh 已登录）
 
 ## 路线图
 
