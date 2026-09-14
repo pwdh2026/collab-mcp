@@ -20,7 +20,6 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from collab_mcp import __version__
-from collab_mcp.app import TOOL_COUNT, server
 from collab_mcp.config import (
     COLLAB_DIR,
     LOG_FILE,
@@ -105,6 +104,11 @@ async def main() -> None:
         # 静态 token 对应一个明确身份；HTTP handler 只读全局环境，启动前先注入。
         http_identity = http_auth.http_identity()
         os.environ["COLLAB_IDENTITY"] = http_identity
+
+    # v3.36.3：app 在 import 期就会按当前环境构建静态 token verifier。
+    # 必须在上面（token 必填 + 身份白名单）校验与身份注入之后才 import，
+    # 保证 verifier 采用的正是被校验过的身份，消除两处取值的时序漂移。
+    from collab_mcp.app import TOOL_COUNT, server
 
     ensure_directories()
     logger.info("=" * 40)

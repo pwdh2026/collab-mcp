@@ -5,6 +5,7 @@
 
 import asyncio
 import os
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -19,6 +20,7 @@ from starlette.testclient import TestClient
 from collab_mcp.http_auth import (
     ENV_HTTP_ALLOWED_IDENTITIES,
     ENV_HTTP_IDENTITY,
+    ENV_HTTP_MODE,
     ENV_HTTP_TOKEN,
     StaticBearerTokenVerifier,
     allowed_http_identities,
@@ -153,6 +155,53 @@ class IdentityAllowlistTest(unittest.TestCase):
             reason = validate_http_identity()
             self.assertIsNotNone(reason)
             self.assertIn("白名单为空", reason)
+
+
+class HttpStartupWiringTest(unittest.TestCase):
+    """v3.36.3：server.py 启动顺序——校验先于 app 构建（verifier 用被校验身份）。"""
+
+    SERVER = Path(__file__).resolve().parent.parent / "server.py"
+
+    def _run(self, args, extra_env):
+        # 剥掉环境里的 COLLAB_*（SSH 注入的 COLLAB_IDENTITY/COLLAB_DIR 等），保证本用例可控
+        env = {k: v for k, v in os.environ.items() if not k.startswith("COLLAB_")}
+        env["PYTHONUTF8"] = "1"
+        env.update(extra_env)
+        return subprocess.run(
+            [sys.executable, str(self.SERVER), *args],
+            capture_output=True, text=True, encoding="utf-8", errors="replace",
+            env=env, timeout=60,
+        )
+
+    def test_version_ignores_misconfigured_allowlist(self):
+        # 非 HTTP 模式不应被白名单配置阻断（校验只在 HTTP 分支内生效）
+        p = self._run(["--version"], {
+            ENV_HTTP_IDENTITY: "PC-X",
+            ENV_HTTP_ALLOWED_IDENTITIES: "PC-A",
+        })
+        self.assertEqual(p.returncode, 0, p.stderr)
+        self.assertIn("Claude 协作 MCP Server v", p.stdout)
+
+    def test_http_bad_identity_exits_before_serving(self):
+        # 身份不在白名单 → 拒绝启动且不进入服务态（app 构建发生在此校验之后）
+        p = self._run([], {
+            ENV_HTTP_MODE: "1",
+            ENV_HTTP_TOKEN: "smoke-token",
+            ENV_HTTP_IDENTITY: "PC-X",
+            ENV_HTTP_ALLOWED_IDENTITIES: "PC-A,PC-B",
+        })
+        self.assertEqual(p.returncode, 2, p.stdout)
+        self.assertIn("白名单", p.stderr)
+        self.assertNotIn("已启动", p.stdout)
+
+    def test_http_missing_token_exits(self):
+        p = self._run([], {
+            ENV_HTTP_MODE: "1",
+            ENV_HTTP_IDENTITY: "PC-A",
+            ENV_HTTP_ALLOWED_IDENTITIES: "PC-A",
+        })
+        self.assertEqual(p.returncode, 2, p.stdout)
+        self.assertIn(ENV_HTTP_TOKEN, p.stderr)
 
 
 if __name__ == "__main__":
