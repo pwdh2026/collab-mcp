@@ -6143,6 +6143,35 @@ class TestSummarizeV37(unittest.IsolatedAsyncioTestCase):
             else:
                 os.environ[k] = v
 
+    # 0) v3.36.4：ollama 分支默认模型必须为本机已装的 qwen2.5:3b（曾误写 qwen2.5:7b）
+    async def test_ollama_default_model_and_override(self):
+        captured = {}
+
+        class _Resp:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                return False
+
+            def read(self):
+                return json.dumps({"choices": [{"message": {"content": "摘要"}}]}).encode("utf-8")
+
+        def _fake_urlopen(req, timeout=None):
+            captured["body"] = json.loads(req.data.decode("utf-8"))
+            return _Resp()
+
+        os.environ["OLLAMA_BASE_URL"] = "http://127.0.0.1:11434"
+        with patch("urllib.request.urlopen", new=_fake_urlopen):
+            r = _parse(await summarize.summarize_text(self.ZH_TEXT, backend="llm"))
+            self.assertTrue(r["success"], r)
+            self.assertEqual(captured["body"]["model"], "qwen2.5:3b")
+
+            os.environ["OLLAMA_MODEL"] = "my-custom:1b"
+            r2 = _parse(await summarize.summarize_text(self.ZH_TEXT, backend="llm"))
+            self.assertTrue(r2["success"], r2)
+            self.assertEqual(captured["body"]["model"], "my-custom:1b")
+
     # 1) 中文提取式：method=extractive、关键内容保留、句子来自原文、长度受控
     async def test_zh_extractive(self):
         r = _parse(await summarize.summarize_text(self.ZH_TEXT))

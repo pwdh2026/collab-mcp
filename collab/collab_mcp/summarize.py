@@ -126,7 +126,9 @@ def _llm_summarize(text: str, lang: str, max_chars: int, timeout: int) -> tuple[
         backend = "openai"
     else:
         base = _llm_base_url("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
-        model = os.environ.get("OLLAMA_MODEL") or "qwen2.5:7b"
+        # v3.36.4：默认与 rag/ai_teacher/vision 对齐用 qwen2.5:3b（本机已装）；
+        # 原默认 qwen2.5:7b 本机未拉取，设了 OLLAMA_BASE_URL 却漏设 OLLAMA_MODEL 时会调空。
+        model = os.environ.get("OLLAMA_MODEL") or "qwen2.5:3b"
         headers = {"Content-Type": "application/json"}
         backend = "ollama"
     lang_hint = {"zh": "用中文输出。", "en": "Output in English.", "": ""}.get(lang, "")
